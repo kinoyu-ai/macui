@@ -1,0 +1,30 @@
+name: Windows CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build-and-test:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt
+      - uses: Swatinem/rust-cache@v2
+      - name: Check formatting
+        run: cargo fmt -- --check
+      - name: Run unit tests
+        run: cargo test -- --nocapture
+      - name: Build standalone release binary
+        run: cargo build --release
+      - name: Upload macui.exe artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: macui-windows-x64
+          path: |
+            target/release/macui.exe
+            restore-taskbar.cmd

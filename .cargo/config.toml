@@ -1,0 +1,4 @@
+# Statically link the MSVC C runtime when building with the MSVC toolchain so the
+# resulting single macui.exe runs on any Windows PC without Visual C++ Redistributable.
+[target.'cfg(all(target_os = "windows", target_env = "msvc"))']
+rustflags = ["-C", "target-feature=+crt-static"]
